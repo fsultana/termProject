@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Store Front</title>
+
+    <style>
+        td{
+            padding: 20px;
+        }
+        .login-link{
+            border: 1px solid gray;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: .8rem;
+            padding: 10px;
+            border-radius: 50px;
+            width: 75px;
+            position: fixed;
+            right: 20px;
+            text-align: center;
+        }
+        .login-link:hover{
+            background: limegreen;
+            color: white;
+            border: none;
+        }
+    </style>
+  </head>
+    <body>
+        <h1>Welcome to <%= store_title %>!</h1>
+        <a href="/login"><span class="login-link">Login</span></a>
+        <!-- <table style= "width: 90%; border: 1px solid grey">
+            <thead style = "background: #6c7ae0; color: white" >
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Price</th>
+                    <th>Image</th>
+                    <th></th>                                        
+                </tr>
+            </thead>
+            <% for (const book of results) { %>
+            <tr>
+                <td> <%= book.title %> </td>
+                <td> <%= book.author %> </td>
+                <td> <%= book.price %> </td>
+                <td> <img src='<%= book.filename %>' width=100 height=100> </td>
+                <td>
+                    <form action='/add' method='post'>
+                        <input type='hidden' name='_id' value='<%= book._id %>'>
+                        <input type='submit' value='Add to Cart'>
+                    </form>
+                </td>
+            </tr>
+            <% } %>
+        </table> -->
+    </body>
+    <br>
+    <h2><a href="/checkout">Shopping Cart</a></h2>
+    <h2><a href="/">Go to Project Front Page</a></h2>
+</html>

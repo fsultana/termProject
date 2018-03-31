@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Home Page</title>
+
+    <style>
+      .button-container{
+        margin-top: 15%;
+        text-align: left;
+        width: 70%;
+      }
+      .button{
+        padding: 10px;
+        width: 150px;
+        background-color: darkblue;
+        text-align: center;
+      }
+      .button:hover{
+        -webkit-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+        -moz-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+        box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+      }
+      a{
+        color: white;
+      }
+      a:hover{
+        text-decoration: none;
+        color: white;
+      }
+      
+      td{
+          padding: 20px;
+      }
+
+
+
+      .login-link{
+          border: 1px solid gray;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: .8rem;
+          padding: 10px;
+          border-radius: 50px;
+          width: 75px;
+          position: fixed;
+          right: 20px;
+          text-align: center;
+      }
+      .login-link:hover{
+          background: limegreen;
+          color: white;
+          border: none;
+      }
+    
+    </style>
+  </head>
+      <center>
+        <body>
+                  
+          <h1>Welcome to <%= store_title %>!</h1>
+          <a href="/login"><span class="login-link">Login</span></a>
+
+          <div style="margin-top: 100px;">
+            <span class="button">
+              <a href="/storefront">Store Front</a>
+            </span>
+            <span class="button" style="margin-left: 20px;">
+              <a href="/adminPage">Admin Page</a>
+            </span>
+          </div>
+      </body>
+  </center>
+</html>

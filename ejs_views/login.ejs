@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include ./partials/header %>
+
+<head><title>Login</title></head>
+<body>
+<nav class="nav nav-pills nav-justified">
+    <a class="nav-link" href="/">Home</a>
+    <a class="nav-link" href="/signup">Register</a>
+    <a class="nav-link active" href="/login">Login</a>
+</nav>
+
+<div class="jumbotron">
+    <div class="container">
+    <h1 class="display-3">Login</h1>
+        <% if (messagesuccess.length > 0) { %>
+            <div class="alert alert-success" role="alert">
+            <%= messagesuccess %>
+            </div>
+        <% } %>
+        <% if (messageerror.length > 0) { %>
+            <div class="alert alert-danger" role="alert">
+            Login Error: <%= messageerror %>
+            </div>
+        <% } %>
+
+    <form name="loginform" action="/login" method="post" onsubmit="return validateForm()">
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" name = "email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    </form>
+    </div> <!-- container -->
+</div>
+<% include ./partials/footer %>
+<% include ./partials/scripts %>
+</body>
+<script>
+    function validateForm() {
+            const email = document.forms["loginform"]["email"].value;
+            if (email == "") {
+                alert("Email not entered");
+                return false;
+            }
+            const password = document.forms["loginform"]["password"].value;
+            if (password == "") {
+                alert("Password not entered");
+                return false;
+            }
+            return true;
+        }
+</script>
+</html>

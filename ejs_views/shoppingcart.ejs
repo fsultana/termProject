@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Shopping Cart</title>
+        <style>
+            table td{
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1><center>Shopping Cart Contents</center></h1>
+        
+            <!-- <table border = "1">
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Price</th>
+                    <th>Image</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+                <%  for (const item of shoppingcart.cart ) { %>
+                    <tr>
+                        <td><% = item.book.title %> </td>
+                        <td> <%= item.book.author %> </td>
+                        <td align="right"> $<%= item.book.price %> </td>
+                        <td align="center"> <img src="<%= item.book.filename %>" width=100 height=100> </td>
+                        <td align="center"> <%= item.qty %> </td>
+                        <td align="right"> $<%= (item.book.price*item.qty).toFixed(2) %> </td>
+                    </tr>
+                    <% } %>
+                    <tr>
+                        <td align="right" colspan="5">TOTAL</td>
+                        <td align="right">$<%= shoppingcart.totalPrice.toFixed(2) %></td>
+                    </tr>
+                </table> -->
+           
+            <br><br>
+            <a href='/storefront'>Continue shopping</a><br>
+            <a href='/checkout'>Check Out</a>
+    </body>
+</html>

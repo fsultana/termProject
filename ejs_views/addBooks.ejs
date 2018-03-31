@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Insert Books</title>
+    <style>
+            .button-container{
+              margin-top: 15%;
+              text-align: left;
+              width: 70%;
+            }
+            .button{
+              padding: 10px;
+              width: 150px;
+              background-color: darkblue;
+              text-align: center;
+              margin-left: 5px;
+            }
+            .button:hover{
+              -webkit-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+              -moz-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+              box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+            }
+            a{
+              color: white;
+            }
+            a:hover{
+              text-decoration: none;
+              color: white;
+            }
+          </style>
+  </head>
+  
+      
+    <body>
+        <center>  <h1>Insert A New Book </h1>
+         
+         <form style="width: 70%;" name="addform" action="/addBooks" method="post" onsubmit="return validateAddForm()" enctype="multipart/form-data">
+            <div class="form-group row">
+                <label for="title" class="col-sm-2 col-form-label">Title</label>
+                <div class="col-sm-10">
+                <input type="text" name="title" class="form-control" id="title" placeholder="title">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="author" class="col-sm-2 col-form-label">Author</label>
+                <div class="col-sm-10">
+                <input type="text" name="author" class="form-control" id="author" placeholder="author">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="price" class="col-sm-2 col-form-label">Price</label>
+                <div class="col-sm-10">
+                <input type="text" name="price" class="form-control" id="price" placeholder="99.99">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <!-- <label for="fileuploadbtn">Choose file</label> -->
+                <img id="image" class="img-thumbnail" height="100">
+                <input style="width:250px" type="file" name="imageUpload" class="form-control-file" id="fileuploadbtn" onchange="handleFileSelect(event)">
+            </div>  
+            <div class="form-group row" style="width: 100px">
+                    <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Insert</button>
+                    </div>
+            </div>
+            
+        </form>
+        <br><br>
+        
+        <div class="button-conatiner">
+                <span class="button">
+                    <a href="/">Go to Project Front Page</a>
+                </span>
+                <span class="button">
+                    <a href="/adminPage">Return to Admin Home Page</a>
+                </span>
+        </div>
+        </center>
+        <!-- <a href="/adminPage">Return to Admin Home Page</a>
+        <a href="/">Go to Project Front Page</a> -->
+         
+  </body>
+  
+  <script>
+        function validateAddForm() {
+            // return true; // CHANGE IT LATER
+            const title = document.forms["addform"]["title"].value;
+            if (title == "") {
+                alert("Title cannot be empty");
+                return false;
+            }
+            const author = document.forms["addform"]["author"].value;
+            if (author == "") {
+                alert("Author cannot be empty");
+                return false;
+            }
+            const price = document.forms["addform"]["price"].value;
+            if (price == "") {
+                alert("Price cannot be empty");
+                return false;
+            }
+            for (const char of price) {
+                if (!(('0' <= char && char <= '9') || char === ".")) {
+                    alert("Price must have digits only");
+                    return false;
+                }
+            }
+            return true;
+        }
+        // Preview uploaded image before submitting
+    function handleFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+
+        // Get first element of the FileList and render image file as a thumbnail.
+        f = files[0];
+
+        // Only process image files.
+        if (!f.type.match('image.*')) {
+            return;
+        }
+
+        var reader = new FileReader();
+
+        // Closure to capture the file information.
+        reader.onload = (function(theFile) {
+            return function(e) {
+                // Render thumbnail.
+                document.getElementById("image").src = e.target.result;
+            };
+        })(f);
+
+        // Read in the image file as a data URL.
+        reader.readAsDataURL(f);
+    }           
+    </script>
+</html>
