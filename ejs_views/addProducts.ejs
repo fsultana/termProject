@@ -7,50 +7,29 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Insert Books</title>
-    <style>
-            .button-container{
-              margin-top: 15%;
-              text-align: left;
-              width: 70%;
-            }
-            .button{
-              padding: 10px;
-              width: 150px;
-              background-color: darkblue;
-              text-align: center;
-              margin-left: 5px;
-            }
-            .button:hover{
-              -webkit-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
-              -moz-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
-              box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
-            }
-            a{
-              color: white;
-            }
-            a:hover{
-              text-decoration: none;
-              color: white;
-            }
-          </style>
+    
+    <link rel="stylesheet" href="/style/styles.css"/>
+
+    <title>Insert Products</title>
   </head>
   
       
     <body>
-        <center>  <h1>Insert A New Book </h1>
+        <% include ./partials/banner %>
+
+        <center>  <h1 class="container">Insert A New Product </h1>
          
-         <form style="width: 70%;" name="addform" action="/addBooks" method="post" onsubmit="return validateAddForm()" enctype="multipart/form-data">
+         <form style="width: 70%;" name="addform" action="/addProducts" method="post" onsubmit="return validateAddForm()" enctype="multipart/form-data">
             <div class="form-group row">
-                <label for="title" class="col-sm-2 col-form-label">Title</label>
+                <label for="category" class="col-sm-2 col-form-label">Product Category</label>
                 <div class="col-sm-10">
-                <input type="text" name="title" class="form-control" id="title" placeholder="title">
+                <input type="text" name="category" class="form-control" id="category" placeholder="Meat">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="author" class="col-sm-2 col-form-label">Author</label>
+                <label for="name" class="col-sm-2 col-form-label">Product Name</label>
                 <div class="col-sm-10">
-                <input type="text" name="author" class="form-control" id="author" placeholder="author">
+                <input type="text" name="name" class="form-control" id="name" placeholder="Beef">
                 </div>
             </div>
             <div class="form-group row">
@@ -67,10 +46,9 @@
             </div>  
             <div class="form-group row" style="width: 100px">
                     <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary">Insert</button>
+                    <button type="submit" class="btn btn-primary insert-btn">Insert</button>
                     </div>
-            </div>
-            
+            </div>            
         </form>
         <br><br>
         
@@ -91,14 +69,14 @@
   <script>
         function validateAddForm() {
             // return true; // CHANGE IT LATER
-            const title = document.forms["addform"]["title"].value;
-            if (title == "") {
+            const category = document.forms["addform"]["category"].value;
+            if (category == "") {
                 alert("Title cannot be empty");
                 return false;
             }
-            const author = document.forms["addform"]["author"].value;
-            if (author == "") {
-                alert("Author cannot be empty");
+            const name = document.forms["addform"]["name"].value;
+            if (name == "") {
+                alert("Name cannot be empty");
                 return false;
             }
             const price = document.forms["addform"]["price"].value;

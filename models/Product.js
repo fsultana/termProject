@@ -3,7 +3,7 @@ mongoose.Promise = global.Promise;
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
-    catagory: String,
+    category: String,
     name: String,
     price: Number,
     // for images

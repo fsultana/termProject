@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<% include ./partials/header %>
+
+<head><title>Unauthorized Access</title></head>
+<body>
+<nav class="nav nav-pills nav-justified">
+    <a class="nav-link active" href="/">Home</a>
+    <a class="nav-link" href="/login">Login</a>
+</nav>
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3">Unauthorized Access</h1>
+        <p>
+            <%= message %>
+        </p>
+    </div>
+</div>
+
+<% include ./partials/footer %>
+<% include ./partials/scripts %>
+</body>
+</html>

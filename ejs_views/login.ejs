@@ -1,44 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<% include ./partials/header %>
 
-<head><title>Login</title></head>
+<head>
+    
+    <% include ./partials/header %>
+    <title>Login</title>
+    <link rel="stylesheet" href="/style/styles.css"/>
+</head>
 <body>
-<nav class="nav nav-pills nav-justified">
-    <a class="nav-link" href="/">Home</a>
-    <a class="nav-link" href="/signup">Register</a>
-    <a class="nav-link active" href="/login">Login</a>
-</nav>
-
-<div class="jumbotron">
+    <% include ./partials/banner %>
+    
     <div class="container">
-    <h1 class="display-3">Login</h1>
-        <% if (messagesuccess.length > 0) { %>
-            <div class="alert alert-success" role="alert">
-            <%= messagesuccess %>
-            </div>
-        <% } %>
-        <% if (messageerror.length > 0) { %>
-            <div class="alert alert-danger" role="alert">
-            Login Error: <%= messageerror %>
-            </div>
-        <% } %>
+        <h1 class="heading">Login</h1>
 
-    <form name="loginform" action="/login" method="post" onsubmit="return validateForm()">
-        <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" name = "email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" name="password" class="form-control" id="password" placeholder="Password">
-          </div>
-          <button type="submit" class="btn btn-primary">Login</button>
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    </form>
-    </div> <!-- container -->
-</div>
-<% include ./partials/footer %>
+            <% if (messagesuccess.length > 0) { %>
+                <div class="alert alert-success" role="alert">
+                <%= messagesuccess %>
+                </div>
+            <% } %>
+            <% if (messageerror.length > 0) { %>
+                <div class="alert alert-danger" role="alert">
+                Login Error: <%= messageerror %>
+                </div>
+            <% } %> 
+        
+                <center>
+                    <form class="login-form" name="loginform" action="/login" method="post" onsubmit="return validateForm()">
+                        <div class="form-group">
+                            <label for="email">Email address</label><br>
+                            <input type="email" name = "email" class="form-control" id="email" aria-describedby="emailHelp">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Password</label><br>
+                            <input type="password" name="password" class="form-control" id="password">
+                        </div>
+                        
+                        <br>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                        <div class="account-msg-container">
+                            <span class="account-msg">Don't have an account?</span>
+                        </div>
+                        
+                        <div class="register-link"><a id="register-link" href="/signup">Register</a></div>
+                        
+                    </form>
+                </center>
+            </div> <!-- container -->
+        
+
+<span class="footer"><% include ./partials/footer %></span>
 <% include ./partials/scripts %>
 </body>
 <script>

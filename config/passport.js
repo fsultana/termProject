@@ -2,7 +2,7 @@
 // the configuration made at app.js is available here too
 // do not configure it again
 const passport = require('passport');
-const User = require('../model/user');
+const User = require('../models/user');
 const LocalStrategy = require('passport-local').Strategy;
 
 // how to serialize user to store in session

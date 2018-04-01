@@ -1,0 +1,161 @@
+body{
+    font-family: myriad-pro,BogleWeb,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+.heading{
+    text-align: center;
+    font-size: 1.875rem;
+    font-weight: 500;
+}
+form{
+    padding: 14px 30px 27px 30px;
+    margin-top: 20px;
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,.15);
+    width: 360px;
+    position: relative;
+    border-radius: 8px;
+}
+label{
+    position: absolute;
+    left: 32px;
+    font-size: .8rem;
+    color: #555;
+}
+.footer{
+    position: absolute;
+    bottom: 0px;
+    left: 30%;
+    width: 300px;
+}
+.btn-primary{
+    width: 100%;
+}
+.btn-primary:hover{
+    cursor: pointer;
+}
+.account-msg-container{
+    margin-top: 15px;
+    border-bottom: 1px solid #d9d9d9;
+    line-height: 16px;
+    text-align: center;
+}
+.account-msg{
+    background: white;
+    position: relative;
+    bottom: -8px;
+    padding: 0 15px;
+    line-height: 16px;
+    text-align: center;
+}
+.register-link{
+    text-decoration: none;
+    width: 100%;
+    border: 1px solid lightgrey;
+    text-align: center;
+    padding: 5px 0px;
+    margin-top: 30px;
+}
+.register-link:hover{
+    border: 1px solid lightskyblue;
+    cursor: pointer;
+}
+#register-link{
+    color: #007bff;
+    text-decoration: none;
+}
+.alert{
+    width: 360px;
+    margin: inherit;
+}
+.button-container{
+    margin-top: 15%;
+    text-align: left;
+    width: 70%;
+}
+.button{
+    padding: 10px;
+    width: 150px;
+    background-color: darkblue;
+    text-align: center;
+}
+.button:hover{
+    -webkit-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+    -moz-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+    box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+}
+.login-a:hover{
+    text-decoration: none;
+    color: white;
+}
+td{
+    padding: 20px;
+}
+.login-link{
+    border: 1px solid gray;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: .8rem;
+    padding: 10px;
+    border-radius: 50px;
+    width: 75px;
+    text-align: center;
+}
+.login-link:hover{
+    background: limegreen;
+    color: white;
+    border: none;
+}
+.banner-container{
+    border-bottom: 1px solid grey;
+    height: 80px;
+    padding-top: 20px;
+    text-align: center;
+}
+.banner-right{
+    position: fixed;
+    right: 20px;
+    display: inline;
+}
+.cart-link{
+    margin-left: 20px;
+}
+.store-title-container{
+    display: inline;
+}
+.store-title{
+    height: 65px;
+    z-index: -1;
+    position: relative;
+}
+.container{
+    background: white;
+    padding-top: 40px;
+}
+.footer{
+    font-size: .7rem;
+}
+
+/* From addProducts! */
+.button-container{
+    margin-top: 15%;
+    text-align: left;
+    width: 70%;
+}
+.button{
+    padding: 10px;
+    width: 150px;
+    background-color: darkblue;
+    text-align: center;
+    margin-left: 5px;
+}
+.button:hover{
+    -webkit-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+    -moz-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+    box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+}
+.insert-btn{
+    color: white;
+    width: initial;
+}
+.insert-btn:hover{
+    text-decoration: none;
+    color: white;
+}

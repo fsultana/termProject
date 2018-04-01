@@ -1,0 +1,19 @@
+<div class="banner-container">
+    <div class="store-title-container">
+        <a href="/"><img src="/img/logo.png" class="store-title"/></a>
+    </div>
+
+    <div class="banner-right">
+        <% if(typeof user === 'undefined'){
+        %>
+            <a class="login-a" href="/login"><span class="login-link">Login</span></a>
+        <%
+        } else{
+        %>
+            <a class="login-a" href="/logout"><span class="login-link">Logout</span></a>
+        <%
+        }%>
+
+        <a href="../shoppingcart"><img class="cart-link" src="/img/ic_shopping_cart_black_24dp/web/big-cart-black.png" height="30px"/></a>
+    </div>
+</div>
