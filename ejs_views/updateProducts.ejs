@@ -4,10 +4,26 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/style/styles.css"/>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Update Books</title>
+    <title>Update Products</title>
+
+    <% if(typeof user === 'undefined'){ %>
+        <script>
+            alert("Please login to access this page.");
+            window.location.replace('/login');
+        </script>
+    
+    else if(user.role !== 'admin'){ %>
+        <script>
+            alert("You must be an admin to access this page.");
+            window.location.replace('/storefront'); // changed from index to storefront
+        </script>
+    <% } %>
+
     <style>
             .button-container{
                 margin-top: 15%;
@@ -26,44 +42,38 @@
                 -moz-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
                 box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
             }
-            a{
-                color: white;
-            }
-            a:hover{
-                text-decoration: none;
-                color: white;
-            }
             </style>
   </head>
   <center>
     <body>
-         <h1>Update the Book </h1>
+        <% include ./partials/banner %>
+         <h1>Update the Product</h1>
          
-         <form style="width: 70%;" name="addform" action="/updateBooks" method="post" onsubmit="return validateAddForm()" enctype="multipart/form-data">
-            <input type="hidden" name="_id" value="<%= book._id %>">
+         <form style="width: 70%;" name="addform" action="/updateProducts" method="post" onsubmit="return validateAddForm()" enctype="multipart/form-data">
+            <input type="hidden" name="_id" value="<%= product._id %>">
             <div class="form-group row">
-                <label for="title" class="col-sm-2 col-form-label">Title</label>
+                <label for="category" class="col-sm-2 col-form-label">Category</label>
                 <div class="col-sm-10">
-                <input type="text" name="title" class="form-control" id="title" value="<%= book.title %>">
+                <input type="text" name="category" class="form-control" id="category" value="<%= product.category %>">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="author" class="col-sm-2 col-form-label">Author</label>
+                <label for="name" class="col-sm-2 col-form-label">Name</label>
                 <div class="col-sm-10">
-                <input type="text" name="author" class="form-control" id="author" value="<%= book.author %>">
+                <input type="text" name="name" class="form-control" id="name" value="<%= product.name %>">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="price" class="col-sm-2 col-form-label">Price</label>
                 <div class="col-sm-10">
-                <input type="text" name="price" class="form-control" id="price" value="<%= book.price %>">
+                <input type="text" name="price" class="form-control" id="price" value="<%= product.price %>">
                 </div>
             </div>
 
             <div class="form-group">                
                 <!-- <label for="fileuploadbtn">Choose file</label> -->
-                <img id="image" src='<%= book.filename %>' class="img-thumbnail" height="100"><br>
-                <input type="file" name="imageUpload" id="fileuploadbtn" value="<%= book.filename %>"
+                <img id="image" src='<%= product.imagepath %>' class="img-thumbnail product-thumbnail" height="100"><br>
+                <input type="file" name="imageUpload" id="fileuploadbtn" value="<%= product.imagepath %>"
                     onchange="handleFileSelect(event)">
                 
             </div>  
@@ -73,10 +83,10 @@
         </form>
         <div class="button-conatiner">
                 <span class="button">
-                    <a href="/">Go to Project Front Page</a>
+                    <a href="/storefront">Store Front Page</a>
                 </span>
                 <span class="button">
-                    <a href="/adminPage">Return to Admin Home Page</a>
+                    <a href="/adminPage">Admin Home Page</a>
                 </span>
         </div>
     </body>
@@ -85,14 +95,14 @@
   <script>
           function validateAddForm() {
             // return true; // CHANGE IT LATER
-            const title = document.forms["addform"]["title"].value;
-            if (title == "") {
-                alert("Title cannot be empty");
+            const category = document.forms["addform"]["category"].value;
+            if (category == "") {
+                alert("Category cannot be empty");
                 return false;
             }
-            const author = document.forms["addform"]["author"].value;
-            if (author == "") {
-                alert("Author cannot be empty");
+            const name = document.forms["addform"]["name"].value;
+            if (name == "") {
+                alert("Name cannot be empty");
                 return false;
             }
             const price = document.forms["addform"]["price"].value;

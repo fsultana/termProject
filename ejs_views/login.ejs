@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    
+<head>    
     <% include ./partials/header %>
     <title>Login</title>
     <link rel="stylesheet" href="/style/styles.css"/>
@@ -13,12 +12,12 @@
     <div class="container">
         <h1 class="heading">Login</h1>
 
-            <% if (messagesuccess.length > 0) { %>
+            <% if (typeof messagesucces !== 'undefined' && messagesuccess.length > 0) { %>
                 <div class="alert alert-success" role="alert">
                 <%= messagesuccess %>
                 </div>
             <% } %>
-            <% if (messageerror.length > 0) { %>
+            <% if (typeof messageerror !== 'undefined' && messageerror.length > 0) { %>
                 <div class="alert alert-danger" role="alert">
                 Login Error: <%= messageerror %>
                 </div>
@@ -37,8 +36,7 @@
                         </div>
                         
                         <br>
-                        <button type="submit" class="btn btn-primary">Login</button>
-                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button type="submit" class="btn btn-primary">Sign in</button>
 
                         <div class="account-msg-container">
                             <span class="account-msg">Don't have an account?</span>

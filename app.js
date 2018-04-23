@@ -1,4 +1,4 @@
-// minimalistic online store: no real database, no authentication
+// Fariha Sultana
 const express = require('express');
 const multer = require('multer');
 const ejs = require('ejs');
@@ -19,7 +19,7 @@ const storageOptions = multer.diskStorage({
         // upload dir path
         callback(null, uploadDir);
     },
-    filename: (req, file, callback) => {
+    imagepath: (req, file, callback) => {
         callback(null, uploadImagePrefix + Date.now()
             + path.extname(file.originalname));
     }
@@ -55,6 +55,15 @@ const morgan = require('morgan');
 // setup express app
 const app = express();
 
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+    service:'gmail',
+    auth:{
+        user:'halalgrocery2018@gmail.com',
+        pass:'halalgrocery'
+    }
+});
+
 app.set('view engine', 'ejs');
 app.set('views', './ejs_views');
 app.use(cookieParser()); //from passport auth files
@@ -84,38 +93,104 @@ app.use(passport.initialize());
 app.use(passport.session()); // for persistent login sessions
 
 // protection against cross site request forgery
-const csrf = require('csurf');
+// const csrf = require('csurf');
+
 // csrf() must be set after cookieParser and session
-app.use(csrf());
+// app.use(csrf());
 
 // run and connect to the database
 require('./models/database');
 require('./config/passport');//from passport auth files
+
+const User = require('./models/user');
 const Product = require('./models/Product');
 const ShoppingCart = require('./models/ShoppingCart');
 app.locals.store_title = 'Halal Meat and Grocery';
 
-//for the index page links
-// app.get('/', (req, res) => {
-    
-//     res.render('index', {}); // where to go next
-// });
-
 app.get('/signup', (req, res) => {
     const messages = req.flash('signuperror');
-    res.render('signup', {req, csrfToken: req.csrfToken(), messages});
+    // res.render('signup', {req, csrfToken: req.csrfToken(), messages});
+    res.render('signup', {req, messages});
 });
 
 app.post('/signup', passport.authenticate('localsignup', {
-    successRedirect: '/login',
+    successRedirect: '/verify',
     failureRedirect: '/signup',
     failureFlash: true
 }));
 
+app.get('/verify', (req, res) => {
+    const messages = req.flash('verifyerror');
+    // res.render('verify', {req, csrfToken: req.csrfToken(), messages});
+    res.render('verify', {req, messages});
+});
+
+// app.post('/verify', passport.authenticate('localverify', {
+//     successRedirect: '/login',
+//     failureRedirect: '/verify',
+//     failureFlash: true
+// }));
+
+app.post('/verify', (req, res) => {
+    // var cache = [];
+    // req = JSON.stringify(req, function(key, value) {
+    //     if (typeof value === 'object' && value !== null) {
+    //         if (cache.indexOf(value) !== -1) {
+    //             // Circular reference found, discard key
+    //             return;
+    //         }
+    //         // Store value in our collection
+    //         cache.push(value);
+    //     }
+    //     return value;
+    // });
+    // cache = null;
+    // console.log(req.body.email + "\n" + req.body.token);
+    let email = req.body.email;
+    User.findOne({'email': email}, (err, user) => {
+        if (err) {
+            console.log("post verify error");
+        }
+        if (!user) {
+            console.log("unable to find user");
+        }
+        else {
+            let verified = user.verifyToken(req.body.token, req);
+            if(verified){
+                console.log("verified!!!");
+                
+                // Change role of user to registered
+                const query = {email: email};
+                const value = {
+                    $set: {
+                        role: 'registered'
+                    }           
+                };
+                User.findOneAndUpdate(query, value, (err, results) => {
+                    if (err) {
+                        return res.status(500).send('<h1>Verification Error</h1>');
+                    }                    
+                    const messagesuccess = req.flash('verifysuccess');
+                    const messageerror = req.flash('verifyerror');
+                    return res.redirect('/storefront');
+                });
+            }
+            else{
+                console.log("Not verified :-(");
+                const messages = req.flash('verifyerror');
+                res.render('verify', {req, messages});
+            }
+        }
+    });
+    
+
+});
+
 app.get('/login', (req, res) => {
     const messagesuccess = req.flash('signupsuccess');
     const messageerror = req.flash('loginerror');
-    res.render('login', {req, csrfToken: req.csrfToken(), messagesuccess, messageerror,user: req.user});
+    // res.render('login', {req, csrfToken: req.csrfToken(), messagesuccess, messageerror,user: req.user});
+    res.render('login', {req, messagesuccess, messageerror, user: req.user});
 })
 
 app.get('/shoppingcart', (req, res) => {
@@ -125,27 +200,45 @@ app.get('/shoppingcart', (req, res) => {
 // register the user at session on successful login
 // then, use auth middleware for user protected page access
 app.post('/login', passport.authenticate('locallogin', {
-    successRedirect: '/',
+    successRedirect: '/storefront',
     failureRedirect: '/login',
     failureFlash: true
 }));
 
 app.get('/logout', (req, res) => {
+    req.session.shoppingcart = null;
+
     req.logout();
-    res.redirect('/');
+    res.redirect('/storefront');
 });
 
 // isLoggedIn middleware verifies if already logged in
 app.get('/', isLoggedIn, (req, res) => {
-    // get user stored in session object and pass it
-    res.render('index', {user: req.user});
-})
+});
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
-        return next();
+        if (!req.session.shoppingcart) {
+            req.session.shoppingcart = new ShoppingCart().serialize();
+        }
+    
+        Product.find({}, (err, results) => {       
+            if (err) {
+                return res.render.status(500).send('<h1>Error</h1>');
+            }
+            return res.render('storefront', {results, Product, user: req.user});
+        } ); // where to go next
     } else {
-        res.render('index', {});
+        if (!req.session.shoppingcart) {
+            req.session.shoppingcart = new ShoppingCart().serialize();
+        }
+    
+        Product.find({}, (err, results) => {       
+            if (err) {
+                return res.render.status(500).send('<h1>Error</h1>');
+            }
+            return res.render('storefront', {results, Product});
+        } );
     }
 }
 
@@ -164,34 +257,49 @@ app.get('/storefront', (req, res) => {
 		if (err) {
 			return res.render.status(500).send('<h1>Error</h1>');
 		}
-		return res.render('storefront', {results, Product});
+		return res.render('storefront', {results, Product, user: req.user});
     }); // where to go next
  
 });
 
-// "add" button is pressed to add books to ShoppingCart
+app.get('/add', (req, res) => {
+    if (!req.session.shoppingcart) {
+        req.session.shoppingcart = new ShoppingCart().serialize();
+    }
+    const shoppingcart = ShoppingCart.deserialize(req.session.shoppingcart);
+    res.render('shoppingcart', {shoppingcart, user: req.user}); // where to go next
+});
+
+// "add" button is pressed to add products to ShoppingCart
 app.post('/add', (req, res) => {
-    Product.findById(req.body._id, (err, book) => {
+    Product.findById(req.body._id, (err, product) => { // ------------------------------------------------
         if (err) {
-            console.error("error\n" + JSON.stringify(err, null, 2));
-			return res.status(500).send('<h1> Error</h1>');
+            //console.error("error\n" + JSON.stringify(err, null, 2));
+            return res.status(500).send('<h1> Error</h1>');
         }
         if (!req.session.shoppingcart) {
             req.session.shoppingcart = new ShoppingCart().serialize();
         }
         const shoppingcart = ShoppingCart.deserialize(req.session.shoppingcart);
-        shoppingcart.add(book);
+
+        if(typeof req.body.action !== 'undefined' && req.body.action == 'remove'){
+            shoppingcart.remove(product); //-----------------------------------------------------------------------    
+        }
+        else{
+            shoppingcart.add(product); //-----------------------------------------------------------------------
+        }
+
         req.session.shoppingcart = shoppingcart.serialize();
         //console.log('sc', req.session.shoppingcart);
-        return res.render('shoppingcart', {shoppingcart});
-		//return res.redirect('/');
-    })	
+        return res.render('shoppingcart', {shoppingcart, user: req.user});
+        //return res.redirect('/');
+    });
 });
 
 app.get('/checkout', (req, res) => {
     let message = '';
-    if (!req.session.shoppingcart) {
-        message = "Did't you buy anything yet? Why checkout?";
+    if (!req.session.shoppingcart || req.session.shoppingcart.length === 0) {
+        message = "Did you buy anything yet? Why checkout?";
     } else {
         const shoppingcart = ShoppingCart.deserialize(req.session.shoppingcart);
         message = `Send $${shoppingcart.totalPrice.toFixed(2)}
@@ -208,21 +316,22 @@ app.get('/adminPage', (req, res) => {
 		if (err) {
 			return res.render.status(500).send('<h1>Error</h1>');
 		}
-		return res.render('adminPage', {results, Product});
+		return res.render('adminPage', {results, Product, user: req.user});
 	}); // where to go next
-     
+    
 });
 
 // to insert products to database
 app.get('/addProducts', (req, res) => {
-	res.render('addProducts');
+	res.render('addProducts', {req, user: req.user});
 });
 
 app.post('/addProducts', (req, res) => {
-    
+   
+    // res.render('addProducts', {username: req.body.username})
     upload(req, res, (err) => {
         if (err) {
-            return res.render('addProducts', { //refers to addBooks.ejs
+            return res.render('addProducts', { //refers to addProducts.ejs
                 results: null, msg: err, filename: null });
         }
         if (!req.file) {
@@ -232,7 +341,7 @@ app.post('/addProducts', (req, res) => {
         }
         const newProduct = new Product({
             //for post method, always use req.body.whatever user input
-            category: req.body.category,  
+            category: req.body.category,
             name: req.body.name,
             price: req.body.price,
             imagepath: uploadDir + '/' + req.file.filename,// for image file
@@ -242,55 +351,67 @@ app.post('/addProducts', (req, res) => {
             if (err) {
                 return res.status(500).send('<h1>save() error</h1>', err);
             }
-            //go to adminPage to add more books or edit/delete
-            return res.redirect('/adminPage'); 
+            // Send email notification to registered users
+            let query = User.find({role: "registered"});
+            query.select('email');
+            
+            // execute the query
+            query.exec(function (err, users) {
+                if (err) return handleError(err);
+                
+                // console.log("emails:\n" + JSON.stringify(users, censor(emails), 2));
+                for(let user of users){
+                    // console.log(user.email);
+                    sendEmail(user.email, "New products from Halal Grocery!",
+                        "Hello grocery shopper,\n Halal Grocery is happy to inform you that we have added " +
+                        req.body.name + " to our product line! Visit the store and shop today!");
+                }
+            });
+            
+            //go to adminPage to add more products or edit/delete
+            return res.redirect('/adminPage');
         });
     });
 });
 
-// to edit the books
-app.get('/updateBooks', (req, res) => {
+// to edit the products
+app.get('/updateProducts', (req, res) => {
     // for get method, use req.query.whatever request
-	const book = JSON.parse(req.query.bookinfo);
-	res.render('updateBooks', {book});
+    const product = JSON.parse(req.query.productinfo);
+    
+    // user: req.user is needed so the page will know the user is logged in
+	res.render('updateProducts', {product, user: req.user});
 });
 
-app.post('/updateBooks', (req, res) => {
+app.post('/updateProducts', (req, res) => {
     upload(req, res, (err) => {
         if (err) {
-            return res.render('updateBooks', { //refers to addBooks.ejs
+            return res.render('updateProducts', { //refers to addProducts.ejs
                 results: null, msg: err, filename: null });
         }
-        //--------------------------------------------------------------------------------------
-        // was giving error before
-        // if (!req.file) {
-        //     return res.render('updateBooks', {
-        //         results: null, msg: 'Error: no file selected', filename: null
-        //     });
-        // }
-        //--------------------------------------------------------------------------------------
+        
         const query = {_id: req.body._id};
         const value = {
             $set: {
-                title: req.body.title,
-                author: req.body.author,
+                category: req.body.category,
+                name: req.body.name,
                 price: req.body.price,
+                //imagepath: uploadDir + '/' + req.file.imagepath,
                 //filename: uploadDir + '/' + req.file.filename,
                 //size: req.file.size 
             }           
         };
         // check if a new file is selected
         if(req.file){
-            value.$set.filename = uploadDir + '/' + req.file.filename;
-            value.$set.size = req.file.size
-            var book = Product.findById(req.body._id, (err, book) => {
-                fs.unlink(book.filename, (err) => {
+            value.$set.imagepath = uploadDir + '/' + req.file.filename;// req.file.filename has to be filename
+            //value.$set.size = req.file.size
+            var product = Product.findById(req.body._id, (err, product) => {
+                fs.unlink(product.imagepath, (err) => {
                     if (err) {
-                        // what should I do?
                         throw err;
                     }
-                }); 
-            });                      
+                });
+            });
         }
         Product.findOneAndUpdate(query, value, (err, results) => {
             if (err) {
@@ -301,27 +422,62 @@ app.post('/updateBooks', (req, res) => {
     })
 });
 
-// to delete
-// delete the file from the /public/uploads directory
-app.get('/removeBooks', (req, res) => {
-    var book = Product.findById(req.query._id, (err, book) => {
-       //console.log(book);
-       // console.log(req.query);
-        fs.unlink(book.filename, (err) => {
+// To delete the file from the /public/uploads directory
+app.get('/removeProducts', (req, res) => {
+    console.log("deleting...");
+
+    let product = Product.findById(req.query._id, (err, product) => {
+    //    console.log(JSON.stringify(product));
+    //    console.log("_id: " + req.query._id);
+        fs.unlink(product.imagepath, (err) => {
             if (err) {
                 // what should I do?
                 throw err;
             }
         }); 
     }); 
-	book.remove( (err, book) => {
+
+	product.remove( (err, product) => {
 		if (err) {
-			return res.status(500).send('<h1>Book Delete error</h1>');
+			return res.status(500).send('<h1>Product Delete error</h1>');
         } 
         res.redirect('/adminPage');
 	});
 });
 
+
+// Used to JSON.stringify circular structures
+function censor(censor) {
+    var i = 0;    
+    return function(key, value) {
+        if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value) 
+        return '[Circular]'; 
+        if(i >= 29) // seems to be a harded maximum of 30 serialized objects?
+        return '[Unknown]';
+        ++i; // so we know we aren't using the original object anymore
+        return value;  
+    }
+}
+
+// Used to send email notification to registered users
+function sendEmail(email, subject, message){
+    console.log("Sending email to " + email);
+
+    let mailOptions ={
+        from: 'halalgrocery2018@gmail.com',
+        to: email,
+        subject: subject,
+        text: message
+    }
+    //Now we can use transporter and mailoptions to send email like this
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);     
+        }else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

@@ -2,17 +2,108 @@
 <html lang="en">
     <head>
         <% include ./partials/header %>
-
+        <link rel="stylesheet" href="/style/styles.css"/>
         <title>Shopping Cart</title>
     </head>
     <body>
-        
+        <!-- <form id="login-form" action="/login" style="display: none;"></form> -->
         <% include ./partials/banner %>
+        <center> 
+            <%  
+                if(typeof user === 'undefined'){ %>
+                    <script>
+                        alert("Please login to access this page.");
+                        window.location.replace('/login');
+                    </script>
+                <% }
 
-        <h1><center>Shopping Cart Contents</center></h1>
-           
-        <br><br>
-        <a href='/storefront'>Continue shopping</a><br>
-        <a href='/checkout'>Check Out</a>
+                if(shoppingcart.cart.length === 0){ %>
+                    <h1 id="empty-cart-message">Your shopping cart is empty!</h1>
+                <% }
+                else{ %>
+                    <h1><center>Shopping Cart Contents</center></h1>
+                    <table id="cart-table" border = "1">
+                        <tr>
+                            <th>Category</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Image</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    <%
+                    for (const item of shoppingcart.cart ) { %>
+                        <tr class="info">
+                            <td> <%= item.product.category %> </td>
+                            <td class="product-name"> <%= item.product.name %> </td>
+                            <td align="right" class="price"> $<%= item.product.price %> </td>
+                            <td align="center"> <img src="<%= item.product.imagepath %>" width=100 height=100> </td>
+                            <td align="center"><input class="quantity-input" type="number" value="<%= item.qty %>" min="0" max="100" style="width: 50px;"/></td>
+                            <td align="right" class="subtotal"> $<%= (item.product.price*item.qty).toFixed(2) %> </td>
+                            <td class="product-id" style="display:none;"><%= item.product._id %></td>
+                        </tr>
+                    <% } %>
+                        <tr class="total">
+                            <td align="right" colspan="5">TOTAL</td>
+                            <td align="right">$<%= shoppingcart.totalPrice.toFixed(2) %></td>
+                        </tr>
+                    </table>
+                <% }
+            %>
+        
+            <br><br>
+            
+            <div class="button-conatiner">
+                    <span class="button">
+                        <a href="/storefront">Continue Shopping</a>
+                    </span>
+                    <span class="button">
+                        <a href="/checkout">Checkout</a>
+                    </span>
+            </div>
+        </center>
+        
+        <form id="update-form" method="post" action="/add" style="display:none;">
+            <input id="update-name" type="hidden" name="productName" />
+            <input id="update-qty" type="hidden" name="productQty" />
+            <input id="update-id" type="hidden" name="_id" />
+            <input id="update-action" type="hidden" name="action" />
+        </form>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+            $('#cart-table').on('input', '.quantity-input', function(){
+                
+                let productName = $(this).parents('.info').find('.product-name').text();
+                let productId = $(this).parents('.info').find('.product-id').text();
+
+                let cart = JSON.parse(sessionStorage.getItem("cart"));
+                if(cart === null){
+                    cart = {};
+                    cart[productName] = 0;
+                }
+                let action = $(this).val > cart[productName] ? "add" : "remove";
+
+                console.log("cart:\n" + JSON.stringify(cart, null, 2));
+
+                cart[productName] = $(this).val();
+                sessionStorage.setItem("cart", JSON.stringify(cart)); 
+
+                let newTotal = $(this).val() * Number( $(this).parents('.info').find('.price').text().replace("$", "") );
+                console.log("newTotal: " + newTotal);
+
+                $(this).parents('.info').find('.subtotal').text( "$" + newTotal.toFixed(2) );
+                
+                console.log('Qty : ' + $(this).val() + ' Price : ' + $(this).parents('.info').find('.price').text() + ' Total : ' + $(this).parents('.info').find('.subtotal').text());
+
+
+                $("#update-name").val(productName);
+                $("#update-qty").val($(this).val());
+                $("#update-id").val(productId);
+                $("#update-form").submit();
+                $("#update-action").val(action);
+            });
+
+        </script>
     </body>
 </html>

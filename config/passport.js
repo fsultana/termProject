@@ -5,6 +5,15 @@ const passport = require('passport');
 const User = require('../models/user');
 const LocalStrategy = require('passport-local').Strategy;
 
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+    service:'gmail',
+    auth:{
+        user:'halalgrocery2018@gmail.com',
+        pass:'halalgrocery'
+    }
+});
+
 // how to serialize user to store in session
 passport.serializeUser((user, callback) => {
     callback(null, user._id);
@@ -31,6 +40,26 @@ passport.use('localsignup',
 
             const newUser = new User();
             newUser.email = email;
+            
+            // Generate email verification token
+            let token = Math.random().toString(36).substr(2, 5);
+            newUser.email_token = token;
+
+            let mailOptions ={
+                from:'halalgrocery2018@gmail.com',
+                to: email,
+                subject:'Halal Grocery verification code',
+                text: 'Please verify your email address using this token: ' + token
+            }
+            //Now we can use transporter and mailoptions to send email like this
+            transporter.sendMail(mailOptions, function(error, info){
+                if(error){
+                    console.log(error);     
+                }else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
+
             newUser.encryptPassword(password, (err, result) => {
                 if (err) return callback(null, false, req.flash('signuperror', err));
                 newUser.password = result;

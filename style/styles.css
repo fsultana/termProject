@@ -75,12 +75,12 @@ label{
     padding: 10px;
     width: 150px;
     background-color: darkblue;
-    text-align: center;
+    text-align: center;    
 }
 .button:hover{
-    -webkit-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
-    -moz-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
-    box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
+    -webkit-box-shadow: 5px 5px 5px 0px rgba(255,255,255,1);
+    -moz-box-shadow: 5px 5px 5px 0px rgba(255,255,255,1);
+    box-shadow: 5px 5px 5px 0px rgba(255,255,255,1);
 }
 .login-a:hover{
     text-decoration: none;
@@ -102,6 +102,35 @@ td{
     background: limegreen;
     color: white;
     border: none;
+}
+.login-a:hover + #account-menu-container{
+    visibility: initial;
+}
+.account-menu-container{
+    visibility: hidden;
+    position: absolute;
+    right: 35px;
+    top: 30px;
+    width: 200px;
+    background: white;
+    box-shadow: 1px 1px 15px rgba(0,0,0,.15)
+}
+.account-menu{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.account-menu li{
+    font-size: .8rem;
+    border-bottom: 1px solid lightgrey;
+    padding: 7px;
+}
+.account-menu li:last-of-type{
+    border-bottom: 0;
+}
+#account-menu-container:hover{
+    visibility: initial;
+    cursor: pointer;
 }
 .banner-container{
     border-bottom: 1px solid grey;
@@ -127,7 +156,7 @@ td{
 }
 .container{
     background: white;
-    padding-top: 40px;
+    padding-top: 50px;
 }
 .footer{
     font-size: .7rem;
@@ -158,4 +187,9 @@ td{
 .insert-btn:hover{
     text-decoration: none;
     color: white;
+}
+
+.product-thumbnail{
+    height: 100px !important;
+    /* display: none; */
 }

@@ -11,6 +11,9 @@ const userSchema = mongoose.Schema({
     },
     role: {
         type: String, enum: ['unregistered', 'registered', 'admin'], default: 'unregistered'
+    },
+    email_token: {
+        type: String, required: false
     }
 });
 
@@ -26,6 +29,25 @@ userSchema.methods.verifyPassword = function(password, callback) {
         if (err) return callback(err);
         return callback(null, result);
     });
+}
+
+// userSchema.methods.verifyToken = function(token, callback){
+//     return callback(null, (token === this.token));
+// }
+
+userSchema.methods.verifyToken = function(token, req){
+    let verified =  (token === this.email_token);
+    if(verified){
+        req.flash('verifysuccess', 'Token verified');
+    }
+    else{
+        req.flash('verifyerror', 'Invalid token');
+    }
+    return verified;
+}
+
+userSchema.methods.setRole = function(role){
+    this.role = role;
 }
 
 module.exports = mongoose.model('users', userSchema);

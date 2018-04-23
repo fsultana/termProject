@@ -37,8 +37,16 @@ class ShoppingCart {
         }
         //console.log("product:\n" + JSON.stringify(product, null, 2));
         this.cart.push({product: product, qty: 1}); //why is it null????`
-        
     }
+    remove(product){
+        for (const item of this.cart) {
+            if (item.product._id == product._id) {
+                item.qty--;
+                return;
+            }
+        }
+    }
+    
     get totalPrice() {
         let total = 0;
         for (const item of this.cart) {

@@ -8,20 +8,8 @@ const productSchema = new Schema({
     price: Number,
     // for images
     imagepath: String,
-    // size: Number
+    //size: Number,
 });
 
-module.exports = mongoose.model('Products', productSchema);
-
-// const bookSchema = new Schema({
-//     title: String,
-//     author: String,
-//     price: Number,
-//     // for images
-//     filename: String,
-//     size: Number      
-// });
-
-// module.exports = mongoose.model('Books', bookSchema);
-
+module.exports = mongoose.model('Product', productSchema);
 

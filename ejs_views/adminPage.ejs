@@ -5,85 +5,72 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/style/styles.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <title>Admin Page</title>
-
-    <style>
-        .button-container{
-            margin-top: 15%;
-            text-align: left;
-            width: 70%;
-        }
-        .button{
-            padding: 10px;
-            width: 150px;
-            background-color: darkblue;
-            text-align: center;
-            margin-left: 5px;
-        }
-        .button:hover{
-            -webkit-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
-            -moz-box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
-            box-shadow: 5px 5px 5px 0px rgba(186,184,186,1);
-        }
-        a{
-            color: white;
-        }
-        a:hover{
-            text-decoration: none;
-            color: white;
-        }
-        </style>
+    <% if(typeof user === 'undefined'){ %>
+        <script>
+            alert("Please login to access this page.");
+            window.location.replace('/login');
+        </script>
+    
+    else if(user.role !== 'admin'){ %>
+        <script>
+            alert("You must be an admin to access this page.");
+            window.location.replace('/storefront'); // changed from index to storefront
+        </script>
+    <% } %>
   </head>
     <body>
-        
-        <center>   
-        <h1>My Broncho Admin Home Page </h1>
+        <center>           
+            <% include ./partials/banner %>
+            <h1>Admin Home Page </h1>
 
-        <table style= "width: 90%; border: 1px solid grey" class="table table-hover">
-            <thead style = "background: #6c7ae0; color: white" >
-                <tr>
-                    <th scope="col">Category</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Photo</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% for (const product of results) { %>
-                <tr>
-                    <td> <%= product.category %> </td>
-                    <td> <%= product.name %> </td>
-                    <td> <%= product.price %> </td>
-                    <td> <img src='<%= product.imagepath %>' class="img-thumbnail" width=100 height=100> </td>
-                    <td>
-                        <form action="/updateProducts" method="get">
-                            <input type="hidden" name="productinfo" value='<%= JSON.stringify(product) %>' >
-                            <button type="submit" class="btn btn-primary">Edit</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="/removeProducts" method="get">
-                            <input type="hidden" name="_id" value="<%= product._id %>">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            <% } %>
-            </tbody>
-        </table>
+            <table style= "width: 90%; border: 1px solid grey" class="table table-hover">
+                <thead style = "background: #6c7ae0; color: white" >
+                    <tr>
+                        <th scope="col">Category</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (const product of results) { %>
+                    <tr>
+                        <td> <%= product.category %> </td>
+                        <td> <%= product.name %> </td>
+                        <td> <%= product.price %> </td>
+                        <td> <img src='<%= product.imagepath %>' class="img-thumbnail product-thumbnail" width=100 height=100> </td>
+                        <td>
+                            <form action="/updateProducts" method="get">
+                                <input type="hidden" name="productinfo" value='<%= JSON.stringify(product) %>' >
+                                <button type="submit" class="btn btn-primary">Edit</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/removeProducts" method="get">
+                                <input type="hidden" name="_id" value="<%= product._id %>">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
 
-        <div class="button-conatiner">
-            <span class="button">
-                <a href="/">Go to Home Page</a>
-            </span>
-            <span class="button">
-                <a href="/addProducts">Insert a New Product</a>
-            </span>
-        </div>
+            <div class="button-conatiner">
+                <span class="button">
+                    <!-- <a href="/">Go to Home Page</a> -->
+                    <a href="/storefront">Store Front</a>
+                </span>
+                <span class="button">
+                    <a href="/addProducts">Insert a New Product</a>
+                </span>
+            </div>
         </center>
     </body>
 </html>
